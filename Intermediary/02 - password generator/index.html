@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Password Generator</h1>
+      <p class="subtitle">Create a strong, random password.</p>
+    </header>
+
+    <div class="pw-row">
+      <span id="pw-display" class="pw-display">••••••••••••</span>
+      <button id="copy-btn" class="icon-btn" aria-label="Copy password">
+        <svg id="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      </button>
+      <button id="refresh-btn" class="icon-btn" aria-label="Generate new password">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="strength-block">
+      <div class="strength-row">
+        <span class="strength-label-text">Strength</span>
+        <span id="strength-label" class="strength-value">—</span>
+      </div>
+      <div class="strength-track">
+        <div id="strength-bar" class="strength-bar"></div>
+      </div>
+    </div>
+
+    <div class="option-block">
+      <div class="length-row">
+        <label for="length-slider">Length</label>
+        <span id="length-value">12</span>
+      </div>
+      <input id="length-slider" type="range" min="4" max="32" value="12" />
+    </div>
+
+    <div class="checkbox-group">
+      <label class="checkbox-item">
+        <input type="checkbox" id="opt-upper" class="opt-check" checked />
+        Uppercase letters (A-Z)
+      </label>
+      <label class="checkbox-item">
+        <input type="checkbox" id="opt-lower" class="opt-check" checked />
+        Lowercase letters (a-z)
+      </label>
+      <label class="checkbox-item">
+        <input type="checkbox" id="opt-numbers" class="opt-check" checked />
+        Numbers (0-9)
+      </label>
+      <label class="checkbox-item">
+        <input type="checkbox" id="opt-symbols" class="opt-check" checked />
+        Symbols (!@#$...)
+      </label>
+    </div>
+
+    <button id="generate-btn" class="generate-btn">Generate Password</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
