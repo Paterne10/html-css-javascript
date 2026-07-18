@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="pricing-wrap">
+    <div class="pricing-head">
+      <p class="pricing-eyebrow">Pricing</p>
+      <h1 class="pricing-title">Simple plans, no surprises</h1>
+      <p class="pricing-sub">Start free. Upgrade when you're ready to scale.</p>
+    </div>
+
+    <div class="billing-toggle">
+      <span class="billing-label active" id="label-monthly">Monthly</span>
+      <button class="switch" id="billing-switch" type="button" aria-label="Toggle yearly billing">
+        <span class="switch-dot"></span>
+      </button>
+      <span class="billing-label" id="label-yearly">Yearly</span>
+      <span class="save-badge">Save 20%</span>
+    </div>
+
+    <div class="pricing-grid" id="pricing-grid"></div>
+
+    <div class="testimonial-section">
+      <div class="testimonial-head">
+        <h2 class="testimonial-title">Loved by teams of all sizes</h2>
+      </div>
+      <div class="testimonial-grid" id="testimonial-grid"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
