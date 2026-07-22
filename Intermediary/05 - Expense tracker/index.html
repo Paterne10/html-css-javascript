@@ -2,10 +2,163 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Makes the layout behave properly on phones and tablets -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Expense Tracker</title>
+
+  <!-- Google Fonts used by the design: Space Grotesk (headings), Inter (body text), JetBrains Mono (numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
+
+  <div class="app">
+
+    <!-- Top bar: app name + button that opens the "add transaction" modal -->
+    <div class="topbar">
+      <div class="wordmark">
+        <span class="tag">expense tracker</span>
+      </div>
+      <button class="btn-add" onclick="openModal()">+ Add transaction</button>
+    </div>
+
+    <div class="grid">
+
+      <!-- LEFT COLUMN: balance gauge + income/expense totals -->
+      <div class="gauge-card">
+        <div class="gauge-wrap">
+          <svg width="190" height="190" viewBox="0 0 190 190">
+            <!-- Background track of the ring -->
+            <circle cx="95" cy="95" r="82" fill="none" stroke="#EFEEE8" stroke-width="14"/>
+            <!-- These two circles are redrawn by JavaScript to show the income/expense proportion -->
+            <circle id="gaugeIncome" cx="95" cy="95" r="82" fill="none" stroke="#0E9C8C" stroke-width="14" stroke-linecap="round" stroke-dasharray="0 515"/>
+            <circle id="gaugeExpense" cx="95" cy="95" r="82" fill="none" stroke="#E85D42" stroke-width="14" stroke-linecap="round" stroke-dasharray="0 515"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="glabel">Balance</div>
+            <!-- This text is updated by JavaScript every time a transaction changes -->
+            <div class="gvalue" id="balanceDisplay">0 FCFA</div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#0E9C8C"></span>Income</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#E85D42"></span>Expenses</div>
+        </div>
+
+        <div class="stat-list">
+          <div class="stat-line income">
+            <span class="slabel">Total income</span>
+            <span class="svalue" id="incomeTotal">0 FCFA</span>
+          </div>
+          <div class="stat-line expense">
+            <span class="slabel">Total expenses</span>
+            <span class="svalue" id="expenseTotal">0 FCFA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: list of transactions, rendered as cards by JavaScript -->
+      <div class="timeline-card">
+        <div class="timeline-head">
+          <h2>Timeline</h2>
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+            <button class="filter-btn" data-filter="income" onclick="setFilter('income')">Income</button>
+            <button class="filter-btn" data-filter="expense" onclick="setFilter('expense')">Expenses</button>
+          </div>
+        </div>
+        <!-- JavaScript injects one ".tx-card" element per transaction inside this container -->
+        <div class="timeline" id="timelineBody"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ADD / EDIT TRANSACTION MODAL (hidden until openModal() adds the "open" class) -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h3 id="modalTitle">Add transaction</h3>
+
+      <!-- Expense / Income switch -->
+      <div class="type-toggle">
+        <button type="button" class="expense active" id="typeExpenseBtn" onclick="setType('expense')">Expense</button>
+        <button type="button" class="income" id="typeIncomeBtn" onclick="setType('income')">Income</button>
+      </div>
+
+      <div class="field amount-field">
+        <label>Amount (FCFA)</label>
+        <input type="number" id="amountInput" placeholder="0" step="1" min="0">
+      </div>
+      <div class="error-msg" id="amountError">Enter an amount greater than 0.</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Category</label>
+          <select id="categoryInput">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Housing</option>
+            <option>Utilities</option>
+            <option>Shopping</option>
+            <option>Health</option>
+            <option>Salary</option>
+            <option>Freelance</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <!-- Custom calendar date picker (replaces the plain browser date input) -->
+        <div class="field">
+          <label>Date</label>
+          <div class="date-field-wrap">
+            <button type="button" class="date-trigger" id="dateTrigger" onclick="toggleCalendar()">
+              <span id="dateTriggerLabel">Select date</span>
+              <span class="date-trigger-caret">▾</span>
+            </button>
+            <div class="calendar-popover" id="calendarPopover">
+              <div class="cal-header">
+                <button type="button" class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+                <span class="cal-title" id="calTitle"></span>
+                <button type="button" class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+              </div>
+              <div class="cal-weekdays">
+                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+              </div>
+              <!-- JavaScript fills this grid with the days of the currently viewed month -->
+              <div class="cal-days" id="calDays"></div>
+              <div class="cal-footer">
+                <button type="button" class="cal-today-btn" onclick="selectToday()">Today</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary expense" id="saveBtn" onclick="saveTransaction()">Add expense</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONGRATS POPUP: shown once, right after the user's very first transaction -->
+  <div class="overlay" id="congratsOverlay">
+    <div class="modal congrats-modal">
+      <div class="confetti-field" id="confettiField"></div>
+      <div class="congrats-badge">✓</div>
+      <h3 class="congrats-title">First income logged!</h3>
+      <p class="congrats-text">Nice — money coming in is now tracked. Keep logging your income and expenses to watch your balance take shape.</p>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="btn-primary income" onclick="closeCongrats()">Let's go</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Our own JavaScript, loaded last so the HTML above already exists when it runs -->
+  <script src="script.js"></script>
 </body>
 </html>
